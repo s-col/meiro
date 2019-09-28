@@ -1,6 +1,8 @@
 # meiro
 迷路を作ったり解いたりする
 
+![demo.png](https://github.com/s-col/meiro/blob/image/meiro.png)
+
 ## 必要なライブラリ
  * numpy
  * matplotlib
