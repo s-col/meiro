@@ -9,7 +9,7 @@ from matplotlib.widgets import Button
 
 START_COLOR = (245, 0, 0)
 GOAL_COLOR = (0, 210, 0)
-SEARCH_COLOR = (100, 255, 255)
+SEARCH_COLOR = (180, 23, 17)
 ROOT_COLOR = (50, 50, 155)
 
 SLEEP_TIME1 = 0.0
