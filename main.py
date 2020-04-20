@@ -1,8 +1,10 @@
 import sys
+import os
+import datetime 
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Button
-#from PIL import Image
+from PIL import Image
 
 from meiro import generate_meiro, solve_meiro
 
@@ -12,6 +14,7 @@ START_COLOR = (245, 0, 0)
 GOAL_COLOR = (0, 210, 0)
 ROOT_COLOR = (50, 50, 155)
 
+BASEPATH = os.path.dirname(os.path.abspath(__file__))
 
 
 def init_meiro_show(meiro_show, meiro, start, goal):
@@ -22,16 +25,16 @@ def init_meiro_show(meiro_show, meiro, start, goal):
 
 
 def refresh(fig, ax, meiro_show, meiro, rows, cols, start, goal):
-    print('refreshing... ', end='')
+    print('refreshing... ', end='', flush=True)
     meiro[:, :] = generate_meiro(rows, cols)
     init_meiro_show(meiro_show, meiro, start, goal)
     ax.set_data(meiro_show)
     fig.canvas.draw_idle()
-    print('refreshed!')
+    print('refreshed!', flush=True)
 
 
 def solve(fig, ax, meiro_show, meiro, start, goal):
-    print('solving... ', end='')
+    print('solving... ', end='', flush=True)
     init_meiro_show(meiro_show, meiro, start, goal)
     solution = solve_meiro(meiro, start, goal)
     for p in solution:
@@ -39,8 +42,17 @@ def solve(fig, ax, meiro_show, meiro, start, goal):
     ax.set_data(meiro_show)
     fig.canvas.draw_idle()
     #Image.fromarray(meiro_show).save('solve_10001.png')
-    print('solved!')
+    print('solved!', flush=True)
     
+
+def save(meiro_show):
+    savedir = os.path.join(BASEPATH, 'fig')
+    if not os.path.exists(savedir):
+        os.mkdir(savedir)
+    filename = 'meiro_ ' + datetime.datetime.now().strftime('%Y%m%d_%H%M%S') + '.png'
+    filepath = os.path.join(savedir, filename)
+    Image.fromarray(meiro_show).save(filepath)
+    print('image saved at {:s}'.format(filepath))
 
 
 def main():
@@ -69,6 +81,12 @@ def main():
 
     # 迷路の描画
     ax = plt.imshow(meiro_show, cmap='gray')
+
+    # saveボタンの描画
+    b_save_ax = plt.axes([0.85, 0.35, 0.1, 0.05])
+    b_save = Button(b_save_ax, 'save')
+    b_save_fun = lambda event: save(meiro_show)
+    b_save.on_clicked(b_save_fun)
 
     # refreshボタンの描画
     b_refresh_ax = plt.axes([0.85, 0.25, 0.1, 0.05])
